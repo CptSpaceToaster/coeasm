@@ -26,9 +26,3 @@ Usage
 Help::
 
     coeasm -h
-
-TODO
-====
-I need to check that the @[number] generates a warning or error if the user jumps to a section in memory that already contains instructions.
-
-There is no check for instructions that currently need an address like LOAD, versus instructions that don't, like LSL.  Currently, if you specify an address after LSL, it will write it to memory, generating a buggy coefile.  

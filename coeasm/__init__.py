@@ -14,11 +14,3 @@ MIN_PYTHON_VERSION = 3, 4
 
 if not sys.version_info >= MIN_PYTHON_VERSION:
     exit("Python {}.{}+ is required.".format(*MIN_PYTHON_VERSION))
-
-import logging
-logger = logging.getLogger(__name__)
-
-try:
-    from . import main
-except ImportError:
-    pass
