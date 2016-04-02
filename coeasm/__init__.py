@@ -2,13 +2,13 @@
 # System
 import sys
 
-__project__ = 'Coegen'
-__version__ = '1.1.0'
+__project__ = 'Coeasm'
+__version__ = '1.0.0'
 
 CLI = 'coeasm'
 MAIN = 'coeasm.main:main'
 VERSION = '{0} v{1}'.format(__project__, __version__)
-DESCRIPTION = 'Assembler to .coe'
+DESCRIPTION = 'Assembler to .coe for an example instruction set'
 
 MIN_PYTHON_VERSION = 3, 4
 
