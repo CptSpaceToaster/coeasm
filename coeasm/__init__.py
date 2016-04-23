@@ -3,7 +3,7 @@
 import sys
 
 __project__ = 'Coeasm'
-__version__ = '1.0.0'
+__version__ = '1.1.1'
 
 CLI = 'coeasm'
 MAIN = 'coeasm.main:main'

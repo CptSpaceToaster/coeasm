@@ -71,7 +71,6 @@ list-sources:
 .PHONY: install
 install: .install
 .install: $(PYTHON) $(DOT_REQ) $(SOURCES) setup.py
-	$(PYTHON) setup.py develop
 	$(PYTHON) setup.py install
 	touch .install
 	@echo "Installed locally in "$(VENV)"/bin/"$(PACKAGE)

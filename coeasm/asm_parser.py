@@ -40,6 +40,54 @@ class InstructionList(object):
                 o.write('\n{:08b}'.format(instruction))
             o.write(';\n')
 
+    def to_vhdl(self, struct_name, rev_instrs=['STOR']):
+        print('type t_{} is array(0 to {}) of std_logic_vector(7 downto 0);'.format(struct_name, self.size-1))
+        print('signal {} : t_{} := ('.format(struct_name, struct_name))
+
+        idx = 0
+        while(idx < self.size):
+            instruction = self.data[idx]
+            if instruction < 0:
+                idx += 1
+                continue
+
+            opcode, rep, nargs, has_addr = self.opcode_parser.instr_lookup(self.data[idx])
+            print('    {:<7} => "{:08b}",    -- {:4s}'.format(idx, self.data[idx], opcode), end='')
+
+            reg = ''
+            if bool(self.data[idx] & 0x01):
+                reg = 'B'
+            else:
+                reg = 'A'
+            addr = ((self.data[idx] & 0x02) << 7) + self.data[idx+1]
+            port = ((self.data[idx] & 0x02) >> 1)
+
+            if has_addr:
+                idx += 2
+                if nargs == 2:
+                    if opcode in rev_instrs:
+                        print(' {}, {}'.format(reg, addr))
+                    else:
+                        print(' {}, {}'.format(addr, reg))
+                elif nargs == 1:
+                    print(' {}'.format(addr))
+                else:
+                    raise AssemblerException('Instruction has an address, but an unrecognized number of arguments: {}'.format(nargs))
+                print('    {:<7} => "{:08b}",'.format(idx-1, self.data[idx-1]))
+            else:
+                idx += 1
+                if nargs == 2:
+                    if opcode in rev_instrs:
+                        print(' {}, {}'.format(reg, port))
+                    else:
+                        print(' {}, {}'.format(port, reg))
+                elif nargs == 1:
+                    print(' {}'.format(reg))
+                else:
+                    print('')
+
+        print('    others  => "{:08b}"     -- all other memory locations set to NOP instr\n);'.format(self.opcode_parser.opcodes['NOP'][0]))
+
     @classmethod
     def from_file(cls, filename, opcode_parser, size=DEFAULT_SIZE):
         ret = cls(opcode_parser, size)

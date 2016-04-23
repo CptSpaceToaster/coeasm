@@ -13,10 +13,12 @@ def main():
     parser.add_argument('FILE', help='File containing assembly')
     parser.add_argument('-o', '--output', dest='output', default=None,
                         help='Output filename')
-    parser.add_argument('-s', '--shellfish', dest='opcode_file', default='opcodes.txt',
+    parser.add_argument('-s', '--shallfish', dest='opcode_file', default='opcodes.txt',
                         help='File containing opcode definitions')
     parser.add_argument('-b', '--bytes', dest='byte_length', default='512', type=int,
                         help='Number of available bytes')
+    parser.add_argument('-d', '--vhdl', dest='vhdl', action='store_true',
+                        help='Output a VHDL array instead of a file')
     parser.add_argument('-v', '--version', action='version', version=coeasm.__version__)
     args = parser.parse_args()
 
@@ -45,5 +47,8 @@ def main():
         print(str(e), file=sys.stderr)
         sys.exit(1)
 
-    print('Writing: {}'.format(outfile))
-    IL.to_file(outfile)
+    if args.vhdl:
+        IL.to_vhdl('mem_data')
+    else:
+        print('Writing: {}'.format(outfile))
+        IL.to_file(outfile)

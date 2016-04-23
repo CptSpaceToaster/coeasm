@@ -9,12 +9,18 @@ class OpcodeParser(object):
     """
     opcodes is a dictionary of key, (rep, narg, addr) pairs, where:
         key - Name of the opcode.  LOAD, STOR, CLR, etc
-        rep - 8 bit numeric representation of the value
+        rep - decimal representation of the value (must be less than 256)
         narg - Integer number of required arguments
         addr - Boolean indicating that the instruction is followed by an 8 bit address
     """
     def __init__(self, opcodes):
         self.opcodes = opcodes
+
+    def instr_lookup(self, instruction):
+        for opcode, (rep, narg, has_addr) in self.opcodes.items():
+            if (instruction & 0xFC) == (rep & 0xFC):
+                return opcode, rep, narg, has_addr
+        return str(instruction), instruction, 0, 0
 
     def parse_line(self, line):
         ret = []
